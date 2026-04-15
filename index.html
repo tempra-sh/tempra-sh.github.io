@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tempra — Security Hardening for the Masses</title>
+    <meta name="description" content="Security hardening for the masses. Single binary engine, community modules, CIS benchmarks. Zero playbooks.">
+    <style>
+        :root {
+            --bg: #0d1117;
+            --fg: #e6edf3;
+            --accent: #58a6ff;
+            --muted: #8b949e;
+            --code-bg: #161b22;
+            --border: #30363d;
+            --green: #3fb950;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        main {
+            max-width: 720px;
+            padding: 80px 24px 48px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        h1 span { color: var(--accent); }
+        .tagline {
+            color: var(--muted);
+            font-size: 1.2rem;
+            margin-bottom: 48px;
+        }
+        h2 {
+            font-size: 1.3rem;
+            margin-top: 48px;
+            margin-bottom: 16px;
+            color: var(--accent);
+        }
+        p { margin-bottom: 16px; }
+        code {
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            overflow-x: auto;
+            margin-bottom: 24px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 480px) {
+            .features { grid-template-columns: 1fr; }
+        }
+        .feature {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+        .feature strong { display: block; margin-bottom: 4px; }
+        .feature span { color: var(--muted); font-size: 0.9em; }
+        .links {
+            margin-top: 48px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .links a {
+            color: var(--accent);
+            text-decoration: none;
+            border: 1px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: border-color 0.2s;
+        }
+        .links a:hover { border-color: var(--accent); }
+        .links a.primary {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        footer {
+            color: var(--muted);
+            font-size: 0.8em;
+            padding: 24px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1><span>Tempra</span></h1>
+        <p class="tagline">Security hardening for the masses.</p>
+
+        <p>
+            Single binary. Community modules. CIS benchmarks.<br>
+            Tempra detects your system, loads hardening modules, generates a plan,
+            applies it with native OS tools, and tracks what changed.
+        </p>
+
+        <h2>Quick start</h2>
+        <pre><code>curl -fsSL https://tempra.sh/install.sh | bash
+sudo tempra init
+sudo tempra apply -y
+sudo tempra status</code></pre>
+        <p>Four commands. Fresh server to hardened server.</p>
+
+        <h2>How it works</h2>
+        <pre><code>$ sudo tempra plan
+
+9 change(s) to apply:
+
+  [CRIT] Disable direct root login via SSH (CIS-5.2.10)
+         (not set) → no
+  [CRIT] Set default policy to deny incoming traffic (CIS-3.5.1.2)
+         Status: inactive → deny (incoming)
+  [HIGH] Ensure fail2ban is installed (CIS-5.2)
+         not installed → installed
+  ...
+
+$ sudo tempra apply -y
+
+[sshd_hardening]
+  [1/12] Disable direct root login via SSH ... OK
+  [2/12] Disable password authentication ... OK
+  ...
+  [pre-check] sshd -t ... OK
+  [handler] restarting sshd ... OK
+
+[basic_firewall]
+  [1/7] Set default policy to deny incoming ... OK
+  ...
+
+[fail2ban_setup]
+  [1/5] Ensure fail2ban is installed ... OK
+  ...
+
+23 changes applied successfully.</code></pre>
+
+        <div class="features">
+            <div class="feature">
+                <strong>Engine + modules</strong>
+                <span>Binary is pure engine. Hardening knowledge lives in community modules.</span>
+            </div>
+            <div class="feature">
+                <strong>Provider system</strong>
+                <span>Modules are declarative. Providers handle UFW vs nftables, systemd vs openrc.</span>
+            </div>
+            <div class="feature">
+                <strong>Handlers</strong>
+                <span>12 SSH config changes = 1 sshd restart. With sshd -t validation first.</span>
+            </div>
+            <div class="feature">
+                <strong>Configurable</strong>
+                <span>Params, templates, custom hooks. /etc/tempra/tempra.toml for overrides.</span>
+            </div>
+            <div class="feature">
+                <strong>Audit trail</strong>
+                <span>tempra status shows what changed and detects manual modifications.</span>
+            </div>
+            <div class="feature">
+                <strong>Idempotent</strong>
+                <span>Run it again. Same result. The system is the source of truth.</span>
+            </div>
+        </div>
+
+        <h2>Install</h2>
+        <pre><code>curl -fsSL https://tempra.sh/install.sh | bash</code></pre>
+
+        <h2>Modules</h2>
+        <p>
+            Modules are declarative TOML files — SSH hardening, firewall setup, intrusion prevention, and more.
+            Tempra downloads them from the
+            <a href="https://github.com/tempra-sh/hub" style="color: var(--accent)">community hub</a>
+            on <code>init</code> and loads them from <code>/var/lib/tempra/modules/</code>.
+        </p>
+        <pre><code>$ tempra modules list        # see what's available
+$ tempra modules update      # pull latest from hub
+$ tempra modules info ssh    # details on a specific module</code></pre>
+
+        <h2>Standing on the shoulders of giants</h2>
+        <p>
+            <a href="https://ansible.com" style="color: var(--accent)">Ansible</a> and
+            <a href="https://dev-sec.io" style="color: var(--accent)">DevSec</a>
+            taught us what to harden. Tempra brings that knowledge without playbooks or agents.
+        </p>
+        <p>
+            <a href="https://terraform.io" style="color: var(--accent)">Terraform</a>'s
+            plan/apply lifecycle and provider model are the backbone of our architecture.
+        </p>
+        <p>
+            <a href="https://nixos.org" style="color: var(--accent)">Nix</a>
+            proved system config can be declarative and reproducible.
+            Tempra brings that idea to any Linux box — without the learning curve.
+        </p>
+        <p>
+            <a href="https://cisofy.com/lynis/" style="color: var(--accent)">Lynis</a>
+            is the best Linux security auditor. It tells you what's wrong.
+            Tempra adds the fix.
+        </p>
+
+        <div class="links">
+            <a href="https://github.com/tempra-sh/tempra" class="primary">GitHub</a>
+            <a href="https://github.com/tempra-sh/hub">Modules</a>
+            <a href="https://github.com/tempra-sh/tempra/blob/main/CHANGELOG.md">Changelog</a>
+        </div>
+    </main>
+    <footer>
+        Tempra is open source (MIT / Apache 2.0)
+    </footer>
+</body>
+</html>
